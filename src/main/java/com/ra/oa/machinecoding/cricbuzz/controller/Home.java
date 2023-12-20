@@ -25,6 +25,7 @@ public class Home {
     final TrendingPostsResponse trendingPostsResponse = new TrendingPostsResponse();
     trendingPostsResponse.setVideos(getTrendingVideos());
     trendingPostsResponse.setEditorials(getTrendingEditorials());
+    trendingPostsResponse.setFeatured(getFeaturedPosts());
     return trendingPostsResponse;
   }
 
