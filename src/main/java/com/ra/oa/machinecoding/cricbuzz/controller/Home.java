@@ -1,6 +1,7 @@
 package com.ra.oa.machinecoding.cricbuzz.controller;
 
 import com.ra.oa.machinecoding.cricbuzz.model.Post;
+import com.ra.oa.machinecoding.cricbuzz.service.premiumplan.PremiumPlanService;
 import com.ra.oa.machinecoding.cricbuzz.service.trending.TrendingService;
 import com.ra.oa.machinecoding.cricbuzz.valuepojo.rest.response.TrendingPostsResponse;
 import java.util.List;
@@ -15,9 +16,11 @@ public class Home {
 
   @Autowired private TrendingService trendingService;
 
+  @Autowired private PremiumPlanService premiumPlanService;
+
   @GetMapping("/premium-plans/**")
   public Object getPremiumPlans() {
-    return "upcoming...";
+    return premiumPlanService.getAllPremiumPlans();
   }
 
   @GetMapping("/trending/**")

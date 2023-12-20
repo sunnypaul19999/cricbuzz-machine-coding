@@ -36,9 +36,24 @@ CREATE TABLE IF NOT EXISTS post (
         REFERENCES post_summary (id)
 );
 
+CREATE TABLE premium_plans (
+    plan_id INT PRIMARY KEY,
+    plan_name VARCHAR(50) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    validity_days INT NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE plan_features (
+    feature_id INT PRIMARY KEY,
+    plan_id INT,
+    feature_name VARCHAR(100) NOT NULL,
+    CONSTRAINT fk_plan_features_premium_plans
+        FOREIGN KEY (plan_id) REFERENCES premium_plans(plan_id)
+);
+
 INSERT INTO `post_type` (`name`) VALUES ('VIDEO'), ('EDITORIAL');
 
--- Insert data into post_summary table
 INSERT INTO post_summary (author_name, heading_1, heading_2, heading_3, preview_text, preview_image_link, post_link)
 VALUES
     ('Author 1', 'Post 1 Heading 1', 'Post 1 Heading 2', 'Post 1 Heading 3', 'Preview text for post 1.', 'https://example.com/image1.jpg', 'https://example.com/post1.html'),
@@ -52,7 +67,7 @@ VALUES
     ('Author 9', 'Post 9 Heading 1', 'Post 9 Heading 2', 'Post 9 Heading 3', 'Preview text for post 9.', 'https://example.com/image9.jpg', 'https://example.com/post9.html'),
     ('Author 10', 'Post 10 Heading 1', 'Post 10 Heading 2', 'Post 10 Heading 3', 'Preview text for post 10.', 'https://example.com/image10.jpg', 'https://example.com/post10.html');
 
--- Insert data into post table
+
 INSERT INTO post (post_type_id, post_summary_id, view_count, creation_date)
 VALUES
     (1, 1, 100, '2023-01-01 12:00:00'),
@@ -65,5 +80,23 @@ VALUES
     (2, 8, 80, '2023-01-08 11:40:00'),
     (1, 9, 95, '2023-01-09 19:05:00'),
     (2, 10, 70, '2023-01-10 15:55:00');
+
+
+INSERT INTO premium_plans (plan_id, plan_name, price, validity_days, description)
+VALUES
+    (1, 'Basic Plan', 19.99, 30, 'Standard features for everyday use'),
+    (2, 'Standard Plan', 29.99, 60, 'Enhanced features for a longer validity period'),
+    (3, 'Premium Plan', 49.99, 90, 'Full access to advanced features with extended validity');
+
+
+INSERT INTO plan_features (feature_id, plan_id, feature_name)
+VALUES
+    (1, 1, 'Access to basic content'),
+    (2, 1, 'Limited support'),
+    (3, 2, 'Access to standard and basic content'),
+    (4, 2, 'Enhanced customer support'),
+    (5, 3, 'Full access to premium content'),
+    (6, 3, 'Priority customer support');
+
 
 
