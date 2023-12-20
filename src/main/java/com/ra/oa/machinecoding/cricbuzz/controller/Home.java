@@ -1,6 +1,7 @@
 package com.ra.oa.machinecoding.cricbuzz.controller;
 
 import com.ra.oa.machinecoding.cricbuzz.model.Post;
+import com.ra.oa.machinecoding.cricbuzz.model.PremiumPlan;
 import com.ra.oa.machinecoding.cricbuzz.service.premiumplan.PremiumPlanService;
 import com.ra.oa.machinecoding.cricbuzz.service.trending.TrendingService;
 import com.ra.oa.machinecoding.cricbuzz.valuepojo.rest.response.TrendingPostsResponse;
@@ -18,12 +19,12 @@ public class Home {
 
   @Autowired private PremiumPlanService premiumPlanService;
 
-  @GetMapping("/premium-plans/**")
-  public Object getPremiumPlans() {
+  @GetMapping("/premium-plans")
+  public List<PremiumPlan> getPremiumPlans() {
     return premiumPlanService.getAllPremiumPlans();
   }
 
-  @GetMapping("/trending/**")
+  @GetMapping("/trending")
   public TrendingPostsResponse getAllTrendingPosts() {
     final TrendingPostsResponse trendingPostsResponse = new TrendingPostsResponse();
     trendingPostsResponse.setVideos(getTrendingVideos());
@@ -32,17 +33,17 @@ public class Home {
     return trendingPostsResponse;
   }
 
-  @GetMapping("/trending/videos/**")
+  @GetMapping("/trending/videos")
   public List<Post> getTrendingVideos() {
     return trendingService.getTrendingVideos();
   }
 
-  @GetMapping("/trending/editorials/**")
+  @GetMapping("/trending/editorials")
   public List<Post> getTrendingEditorials() {
     return trendingService.getTrendingEditorials();
   }
 
-  @GetMapping("/trending/featured/**")
+  @GetMapping("/trending/featured")
   public List<Post> getFeaturedPosts() {
     return trendingService.getFeaturedPosts();
   }
