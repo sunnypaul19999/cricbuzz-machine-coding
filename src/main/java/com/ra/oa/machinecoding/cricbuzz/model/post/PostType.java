@@ -1,4 +1,4 @@
-package com.ra.oa.machinecoding.cricbuzz.model;
+package com.ra.oa.machinecoding.cricbuzz.model.post;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,7 +8,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "post_type")
 public class PostType {
@@ -20,25 +26,9 @@ public class PostType {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private int id;
 
-  @Column(name = "name", nullable = false, length = 10)
   @Enumerated(EnumType.STRING)
-  private PostTypeEnum postType;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public PostTypeEnum getPostType() {
-    return postType;
-  }
-
-  public void setPostType(PostTypeEnum postType) {
-    this.postType = postType;
-  }
+  @Column(name = "name", nullable = false, length = 10)
+  private PostTypeEnum name;
 }

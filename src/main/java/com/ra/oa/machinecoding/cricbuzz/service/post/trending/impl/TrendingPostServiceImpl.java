@@ -1,8 +1,8 @@
-package com.ra.oa.machinecoding.cricbuzz.service.trending.impl;
+package com.ra.oa.machinecoding.cricbuzz.service.post.trending.impl;
 
-import com.ra.oa.machinecoding.cricbuzz.model.Post;
-import com.ra.oa.machinecoding.cricbuzz.repository.PostRepository;
-import com.ra.oa.machinecoding.cricbuzz.service.trending.TrendingService;
+import com.ra.oa.machinecoding.cricbuzz.model.post.Post;
+import com.ra.oa.machinecoding.cricbuzz.repository.post.PostRepository;
+import com.ra.oa.machinecoding.cricbuzz.service.post.trending.TrendingPostService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TrendingServiceImpl implements TrendingService {
+public class TrendingPostServiceImpl implements TrendingPostService {
 
   @Autowired private PostRepository postRepository;
 

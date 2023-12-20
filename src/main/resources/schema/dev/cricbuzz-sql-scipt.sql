@@ -1,8 +1,28 @@
-drop database if exists cricbuzz;
+DROP DATABASE IF EXISTS cricbuzz;
 
-create database if not exists cricbuzz;
+CREATE DATABASE IF NOT EXISTS cricbuzz;
 
 use cricbuzz;
+
+CREATE TABLE premium_plan (
+    id INT,
+    plan_name VARCHAR(50) NOT NULL,
+    price DECIMAL(10 , 2 ) NOT NULL,
+    validity_days INT NOT NULL,
+    description TEXT,
+    CONSTRAINT post_summary__id_pk PRIMARY KEY (id)
+);
+
+
+CREATE TABLE premium_plan_feature (
+    id INT,
+    premium_plan_id INT,
+    feature_name VARCHAR(100) NOT NULL,
+    CONSTRAINT premium_plan_feature__id_pk PRIMARY KEY (id),
+    CONSTRAINT premium_plan_feature__id_fk FOREIGN KEY (premium_plan_id)
+        REFERENCES premium_plan (id)
+);
+
 
 CREATE TABLE IF NOT EXISTS post_type (
     id INT AUTO_INCREMENT,
@@ -11,8 +31,24 @@ CREATE TABLE IF NOT EXISTS post_type (
     CONSTRAINT post_type__name_ak UNIQUE KEY (name)
 );
 
+
+CREATE TABLE IF NOT EXISTS post (
+    id INT AUTO_INCREMENT,
+    post_type_id INT NOT NULL,
+    view_count INT DEFAULT 0,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    premium_plan_id INT NOT NULL,
+    CONSTRAINT post__id_pk PRIMARY KEY (id),
+    CONSTRAINT post__post_type_id_fk FOREIGN KEY (post_type_id)
+        REFERENCES post_type (id),
+    CONSTRAINT post__premium_plan_id_fk FOREIGN KEY (premium_plan_id)
+        REFERENCES premium_plan (id)
+);
+
+
 CREATE TABLE IF NOT EXISTS post_summary (
     id INT AUTO_INCREMENT,
+    post_id INT,
     author_name VARCHAR(20),
     heading_1 VARCHAR(100) NOT NULL,
     heading_2 VARCHAR(100),
@@ -20,83 +56,58 @@ CREATE TABLE IF NOT EXISTS post_summary (
     preview_text VARCHAR(200),
     preview_image_link TEXT NOT NULL,
     post_link TEXT NOT NULL,
-    CONSTRAINT post_summary__id_pk PRIMARY KEY (id)
+    CONSTRAINT post_summary__id_pk PRIMARY KEY (id),
+    CONSTRAINT post_summary__post_id_ak UNIQUE KEY (post_id),
+    CONSTRAINT post_summary__post_id_fk FOREIGN KEY (post_id)
+        REFERENCES post (id)
+        ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS post (
-    id INT AUTO_INCREMENT,
-    post_type_id INT NOT NULL,
-    post_summary_id INT NOT NULL,
-    view_count INT DEFAULT 0,
-    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    CONSTRAINT post__id_pk PRIMARY KEY (id),
-    CONSTRAINT post__post_type_id_fk FOREIGN KEY (post_type_id)
-        REFERENCES post_type (id),
-    CONSTRAINT post__post_summary_id_fk FOREIGN KEY (post_summary_id)
-        REFERENCES post_summary (id)
-);
 
-CREATE TABLE premium_plans (
-    plan_id INT PRIMARY KEY,
-    plan_name VARCHAR(50) NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    validity_days INT NOT NULL,
-    description TEXT
-);
+-- Insert sample data into premium_plan table
+INSERT INTO premium_plan (id, plan_name, price, validity_days, description) VALUES
+    (1, 'Basic Plan', 9.99, 30, 'Access to basic cricket content'),
+    (2, 'Pro Plan', 19.99, 60, 'Enhanced features for cricket enthusiasts'),
+    (3, 'Premium Plan', 29.99, 90, 'Exclusive access to premium cricket content');
 
-CREATE TABLE plan_features (
-    feature_id INT PRIMARY KEY,
-    plan_id INT,
-    feature_name VARCHAR(100) NOT NULL,
-    CONSTRAINT fk_plan_features_premium_plans
-        FOREIGN KEY (plan_id) REFERENCES premium_plans(plan_id)
-);
+-- Insert sample data into premium_plan_feature table
+INSERT INTO premium_plan_feature (id, premium_plan_id, feature_name) VALUES
+    (1, 1, 'Live Match Streaming'),
+    (2, 1, 'News Updates'),
+    (3, 2, 'Match Analysis'),
+    (4, 2, 'HD Video Playback'),
+    (5, 3, 'Exclusive Interviews'),
+    (6, 3, 'Access to Archives');
 
-INSERT INTO `post_type` (`name`) VALUES ('VIDEO'), ('EDITORIAL');
+-- Insert sample data into post_type table
+INSERT INTO post_type (name) VALUES 
+    ('VIDEO'), 
+    ('EDITORIAL');
 
-INSERT INTO post_summary (author_name, heading_1, heading_2, heading_3, preview_text, preview_image_link, post_link)
-VALUES
-    ('Author 1', 'Post 1 Heading 1', 'Post 1 Heading 2', 'Post 1 Heading 3', 'Preview text for post 1.', 'https://example.com/image1.jpg', 'https://example.com/post1.html'),
-    ('Author 2', 'Post 2 Heading 1', 'Post 2 Heading 2', 'Post 2 Heading 3', 'Preview text for post 2.', 'https://example.com/image2.jpg', 'https://example.com/post2.html'),
-    ('Author 3', 'Post 3 Heading 1', 'Post 3 Heading 2', 'Post 3 Heading 3', 'Preview text for post 3.', 'https://example.com/image3.jpg', 'https://example.com/post3.html'),
-    ('Author 4', 'Post 4 Heading 1', 'Post 4 Heading 2', 'Post 4 Heading 3', 'Preview text for post 4.', 'https://example.com/image4.jpg', 'https://example.com/post4.html'),
-    ('Author 5', 'Post 5 Heading 1', 'Post 5 Heading 2', 'Post 5 Heading 3', 'Preview text for post 5.', 'https://example.com/image5.jpg', 'https://example.com/post5.html'),
-    ('Author 6', 'Post 6 Heading 1', 'Post 6 Heading 2', 'Post 6 Heading 3', 'Preview text for post 6.', 'https://example.com/image6.jpg', 'https://example.com/post6.html'),
-    ('Author 7', 'Post 7 Heading 1', 'Post 7 Heading 2', 'Post 7 Heading 3', 'Preview text for post 7.', 'https://example.com/image7.jpg', 'https://example.com/post7.html'),
-    ('Author 8', 'Post 8 Heading 1', 'Post 8 Heading 2', 'Post 8 Heading 3', 'Preview text for post 8.', 'https://example.com/image8.jpg', 'https://example.com/post8.html'),
-    ('Author 9', 'Post 9 Heading 1', 'Post 9 Heading 2', 'Post 9 Heading 3', 'Preview text for post 9.', 'https://example.com/image9.jpg', 'https://example.com/post9.html'),
-    ('Author 10', 'Post 10 Heading 1', 'Post 10 Heading 2', 'Post 10 Heading 3', 'Preview text for post 10.', 'https://example.com/image10.jpg', 'https://example.com/post10.html');
+-- Insert sample data into post table
+INSERT INTO post (post_type_id, premium_plan_id, view_count, creation_date) VALUES
+    (1, 1, 1000, '2023-01-15 10:30:00'),
+    (2, 2, 500, '2023-02-02 14:45:00'),
+    (1, 3, 1200, '2023-03-10 18:20:00'),
+    (2, 1, 800, '2023-04-05 12:15:00'),
+    (1, 2, 1500, '2023-05-20 09:45:00'),
+    (2, 3, 700, '2023-06-08 16:00:00'),
+    (1, 1, 900, '2023-07-12 11:10:00'),
+    (2, 2, 600, '2023-08-28 20:30:00'),
+    (1, 3, 1100, '2023-09-14 13:40:00'),
+    (2, 1, 750, '2023-10-03 15:00:00');
 
 
-INSERT INTO post (post_type_id, post_summary_id, view_count, creation_date)
-VALUES
-    (1, 1, 100, '2023-01-01 12:00:00'),
-    (2, 2, 50, '2023-01-02 14:30:00'),
-    (1, 3, 75, '2023-01-03 16:45:00'),
-    (2, 4, 120, '2023-01-04 18:20:00'),
-    (1, 5, 90, '2023-01-05 10:10:00'),
-    (2, 6, 60, '2023-01-06 08:30:00'),
-    (1, 7, 110, '2023-01-07 22:15:00'),
-    (2, 8, 80, '2023-01-08 11:40:00'),
-    (1, 9, 95, '2023-01-09 19:05:00'),
-    (2, 10, 70, '2023-01-10 15:55:00');
-
-
-INSERT INTO premium_plans (plan_id, plan_name, price, validity_days, description)
-VALUES
-    (1, 'Basic Plan', 19.99, 30, 'Standard features for everyday use'),
-    (2, 'Standard Plan', 29.99, 60, 'Enhanced features for a longer validity period'),
-    (3, 'Premium Plan', 49.99, 90, 'Full access to advanced features with extended validity');
-
-
-INSERT INTO plan_features (feature_id, plan_id, feature_name)
-VALUES
-    (1, 1, 'Access to basic content'),
-    (2, 1, 'Limited support'),
-    (3, 2, 'Access to standard and basic content'),
-    (4, 2, 'Enhanced customer support'),
-    (5, 3, 'Full access to premium content'),
-    (6, 3, 'Priority customer support');
-
-
+-- Insert sample data into post_summary table
+INSERT INTO post_summary (post_id, author_name, heading_1, heading_2, heading_3, preview_text, preview_image_link, post_link) VALUES
+    (1, 'John Doe', 'Exciting Match Highlights', 'Best Moments', NULL, 'Catch the highlights of the thrilling match between Teams A and B.', 'image1.jpg', 'video_link1'),
+    (2, 'Jane Smith', 'Cricket Editorial: Player Performances', 'In-Depth Analysis', NULL, 'Analyze the performance of key players in recent cricket matches.', 'image2.jpg', 'editorial_link1'),
+    (3, 'Sam Johnson', 'Live Streaming: Team A vs Team B', 'Full Match Coverage', NULL, 'Watch the live streaming of the exciting cricket match between Teams A and B.', 'image3.jpg', 'video_link2'),
+    (4, 'Emily White', 'Expert Commentary: Cricket Strategies', 'Insider Insights', NULL, 'Get insights into the strategies adopted by cricket teams in recent matches.', 'image4.jpg', 'editorial_link2'),
+    (5, 'Chris Green', 'Cricket Moments: Best Catches', 'Top Catches Compilation', NULL, 'Relive the best moments with a compilation of amazing catches from recent cricket matches.', 'image5.jpg', 'video_link3'),
+    (6, 'Sophia Brown', 'Exclusive Interview: Star Player', 'Behind the Scenes', NULL, 'An exclusive interview with a star cricket player, revealing behind-the-scenes stories.', 'image6.jpg', 'editorial_link3'),
+    (7, 'Alex Taylor', 'Live Match Streaming: Team C vs Team D', 'Full Match Experience', NULL, 'Experience the live streaming of the intense cricket match between Teams C and D.', 'image7.jpg', 'video_link4'),
+    (8, 'Oliver Davis', 'Cricket Editorial: Emerging Talents', 'Future Stars', NULL, 'Explore the rising talents and future stars in the world of cricket.', 'image8.jpg', 'editorial_link4'),
+    (9, 'Mia Wilson', 'Cricket Moments: Memorable Sixes', 'Sixes Compilation', NULL, 'Enjoy a compilation of memorable sixes hit by cricket players in various matches.', 'image9.jpg', 'video_link5'),
+    (10, 'Ethan Miller', 'In-Depth Analysis: Cricket Strategies', 'Tactical Breakdown', NULL, 'A detailed analysis breaking down the strategic moves and tactics used by cricket teams.', 'image10.jpg', 'editorial_link5');
 

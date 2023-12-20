@@ -1,6 +1,6 @@
 package com.ra.oa.machinecoding.cricbuzz.valuepojo.rest.response;
 
-import com.ra.oa.machinecoding.cricbuzz.model.Post;
+import com.ra.oa.machinecoding.cricbuzz.model.post.Post;
 import java.util.List;
 
 public class TrendingPostsResponse {
