@@ -10,6 +10,7 @@ CREATE TABLE premium_plan (
     price DECIMAL(10 , 2 ) NOT NULL,
     validity_days INT NOT NULL,
     description TEXT,
+    CONSTRAINT premium_plan__plan_name_ak UNIQUE KEY (plan_name),
     CONSTRAINT post_summary__id_pk PRIMARY KEY (id)
 );
 
