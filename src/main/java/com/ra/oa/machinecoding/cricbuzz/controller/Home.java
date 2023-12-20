@@ -17,7 +17,7 @@ public class Home {
 
   @GetMapping("/premium-plans/**")
   public Object getPremiumPlans() {
-    return "s";
+    return "upcoming...";
   }
 
   @GetMapping("/trending/**")
