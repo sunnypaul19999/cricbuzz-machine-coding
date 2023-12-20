@@ -15,11 +15,13 @@ public class TrendingServiceImpl implements TrendingService {
   @Autowired private PostRepository postRepository;
 
   public List<Post> getTrendingVideos() {
-    return postRepository.findTopPosts(1, 10);
+    return postRepository.findByPostTypeId(
+        1, PageRequest.of(0, 10, Sort.by(Sort.Order.desc("viewCount"))));
   }
 
   public List<Post> getTrendingEditorials() {
-    return postRepository.findTopPosts(2, 10);
+    return postRepository.findByPostTypeId(
+        2, PageRequest.of(0, 10, Sort.by(Sort.Order.desc("viewCount"))));
   }
 
   public List<Post> getFeaturedPosts() {

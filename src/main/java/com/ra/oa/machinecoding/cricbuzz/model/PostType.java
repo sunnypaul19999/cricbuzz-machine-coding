@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "post_type")
-public class PostTypeModel {
+public class PostType {
 
   public enum PostTypeEnum {
     VIDEO,
